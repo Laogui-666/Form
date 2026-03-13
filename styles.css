@@ -1093,3 +1093,118 @@ input[readonly] {
 span.flatpickr-weekday {
     color: var(--text-secondary) !important;
 }
+
+/* ========================================
+   预览样式
+   ======================================== */
+.preview-container {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+}
+
+.preview-header {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.preview-header h3 {
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.preview-hint {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.preview-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.preview-section {
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    border: 1px solid rgba(108, 133, 152, 0.15);
+}
+
+.preview-section h4 {
+    font-size: 1rem;
+    color: var(--primary-dark);
+    margin-bottom: var(--spacing-sm);
+    padding-bottom: var(--spacing-xs);
+    border-bottom: 2px solid var(--primary-light);
+}
+
+.preview-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-sm);
+}
+
+.preview-grid > div {
+    padding: var(--spacing-xs) 0;
+    font-size: 0.875rem;
+}
+
+.preview-grid strong {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* 错误样式 */
+input.error,
+select.error,
+textarea.error {
+    border-color: var(--error) !important;
+    background: rgba(193, 120, 120, 0.1) !important;
+}
+
+input.error:focus,
+select.error:focus,
+textarea.error:focus {
+    box-shadow: 0 0 0 3px rgba(193, 120, 120, 0.2) !important;
+}
+
+/* 导出按钮 */
+.export-actions {
+    justify-content: center;
+    gap: var(--spacing-md);
+}
+
+.btn-export {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    transition: all var(--transition-normal);
+    box-shadow: 0 4px 15px rgba(108, 133, 152, 0.3);
+}
+
+.btn-export:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(108, 133, 152, 0.4);
+}
+
+.btn-export:active {
+    transform: translateY(0);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .preview-grid {
+        grid-template-columns: 1fr;
+    }
+}
