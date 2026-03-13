@@ -648,6 +648,15 @@ function formatDate(dateStr) {
     return date.toLocaleDateString('zh-CN');
 }
 
+// 获取当前日期
+function getCurrentDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}年${month}月${day}日`;
+}
+
 function getMaritalStatusText(value) {
     const map = { 'single': '未婚', 'married': '已婚', 'separated': '分居', 
         'divorced': '离异', 'widowed': '丧偶', 'other': '其他' };
@@ -699,18 +708,120 @@ function exportToWord() {
             <meta charset='utf-8'>
             <title>申根签证申请表</title>
             <style>
-                body { font-family: 'SimSun', '宋体', Arial, sans-serif; font-size: 12pt; }
-                h1 { text-align: center; font-size: 18pt; }
-                h2 { font-size: 14pt; border-bottom: 1px solid #000; padding-bottom: 5px; margin-top: 20px; }
-                h3 { font-size: 12pt; margin-top: 15px; }
-                table { width: 100%; border-collapse: collapse; margin: 10px 0; }
-                td { border: 1px solid #000; padding: 5px 8px; }
-                .label { font-weight: bold; background: #f0f0f0; width: 30%; }
-                .section { margin-top: 20px; }
+                body { 
+                    font-family: 'Microsoft YaHei', '微软雅黑', 'SimSun', Arial, sans-serif; 
+                    font-size: 11pt; 
+                    line-height: 1.8;
+                    color: #1a1a1a;
+                    background: #fff;
+                    padding: 1.5cm;
+                }
+                h1 { 
+                    text-align: center; 
+                    font-size: 22pt; 
+                    font-weight: 600;
+                    color: #4A6572;
+                    margin-bottom: 10px;
+                    letter-spacing: 4px;
+                }
+                .subtitle {
+                    text-align: center;
+                    font-size: 10pt;
+                    color: #8899A6;
+                    margin-bottom: 30px;
+                    padding-bottom: 20px;
+                    border-bottom: 2px solid #B5C1C3;
+                }
+                h2 { 
+                    font-size: 13pt; 
+                    font-weight: 600;
+                    color: #4A6572;
+                    padding: 10px 15px;
+                    margin: 25px 0 15px 0;
+                    background: linear-gradient(135deg, #E4E6E9 0%, #F0F2F5 100%);
+                    border-left: 4px solid #6C8598;
+                    border-radius: 0 8px 8px 0;
+                }
+                h3 {
+                    font-size: 11pt;
+                    font-weight: 600;
+                    color: #5D6D7E;
+                    margin: 20px 0 10px 0;
+                    padding-bottom: 5px;
+                    border-bottom: 1px solid #E4E6E9;
+                }
+                table { 
+                    width: 100%; 
+                    border-collapse: collapse; 
+                    margin: 15px 0;
+                    table-layout: fixed;
+                }
+                tr:nth-child(even) {
+                    background: #F8F9FA;
+                }
+                td { 
+                    border: 1px solid #D5DBDB; 
+                    padding: 10px 12px; 
+                    word-wrap: break-word;
+                }
+                td:first-child { 
+                    width: 28%;
+                    background: #F0F2F5;
+                    color: #1a1a1a;
+                    font-weight: 600;
+                    border-right: none;
+                }
+                td:last-child {
+                    border-left: none;
+                }
+                .label { 
+                    font-weight: 500; 
+                    background: #F0F2F5;
+                    color: #4A6572;
+                }
+                .section { 
+                    margin-top: 20px; 
+                }
+                .info-box {
+                    background: linear-gradient(135deg, #E4E6E9 0%, #F0F2F5 100%);
+                    border: 1px solid #B5C1C3;
+                    border-radius: 8px;
+                    padding: 15px 20px;
+                    margin: 20px 0;
+                }
+                .info-box p {
+                    margin: 5px 0;
+                    color: #5D6D7E;
+                }
+                .signature {
+                    margin-top: 50px;
+                    padding: 30px;
+                    border-top: 2px dashed #B5C1C3;
+                }
+                .signature-line {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-top: 30px;
+                }
+                .signature-item {
+                    text-align: center;
+                    color: #5D6D7E;
+                    font-size: 10pt;
+                }
+                .signature-item span {
+                    display: block;
+                    margin-top: 8px;
+                    color: #8899A6;
+                }
+                .highlight {
+                    color: #6C8598;
+                    font-weight: 600;
+                }
             </style>
         </head>
         <body>
             <h1>申根签证申请表</h1>
+            <p class="subtitle">Schengen Visa Application Form · 盼达文旅</p>
             
             <h2>一、个人信息</h2>
             <table>
@@ -826,12 +937,20 @@ function exportToWord() {
     // 费用信息
     content += `
             <h2>五、费用与出资信息</h2>
-            <table>
-                <tr><td class="label">费用来源</td><td>${formData.fundingSource === 'applicant' ? '本人支付' : '赞助人支付'}</td></tr>
-            </table>
+            <div class="info-box">
+                <p><strong>费用来源：</strong><span class="highlight">${formData.fundingSource === 'applicant' ? '本人支付' : '赞助人支付'}</span></p>
+            </div>
             
-            <p style="margin-top: 30px;">申请人签名：__________________</p>
-            <p>日期：__________________</p>
+            <div class="signature">
+                <div class="signature-line">
+                    <div class="signature-item" style="flex: 1;">
+                        申请人签字：<span style="border-bottom: 1px solid #333; display: inline-block; min-width: 200px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    </div>
+                    <div class="signature-item" style="flex: 1;">
+                        日期：<span style="border-bottom: 1px solid #333; display: inline-block; min-width: 150px;">${getCurrentDate()}</span>
+                    </div>
+                </div>
+            </div>
         </body>
         </html>
     `;
