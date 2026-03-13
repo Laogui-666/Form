@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>盼达文旅 - 申根填表助手</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <div class="background">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <div class="container">
+        <header class="header">
+            <div class="title-text">
+                <h1>盼达文旅</h1>
+                <p class="subtitle">申根填表助手 · Schengen Visa Wizard</p>
+            </div>
+        </header>
+
+        <!-- 进度条 -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="steps-indicator">
+                <span class="step active" data-step="1">个人信息</span>
+                <span class="step" data-step="2">证件信息</span>
+                <span class="step" data-step="3">行程信息</span>
+                <span class="step" data-step="4">邀请住宿</span>
+                <span class="step" data-step="5">费用出资</span>
+                <span class="step" data-step="6">预览导出</span>
+            </div>
+        </div>
+
+        <!-- 主卡片 -->
+        <main class="glass-card" id="mainCard">
+            <!-- Step 1: 个人信息 -->
+            <section class="form-step active" id="step1">
+                <h2 class="step-title">
+                    <span class="step-number">01</span>
+                    个人信息
+                </h2>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="surname">姓 (Surname) <span class="required">*</span></label>
+                        <input type="text" id="surname" name="surname" placeholder="请输入姓" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthSurname">出生时姓氏</label>
+                        <input type="text" id="birthSurname" name="birthSurname" placeholder="如有曾用名请填写">
+                    </div>
+                    <div class="form-group">
+                        <label for="givenName">名 (Given Name) <span class="required">*</span></label>
+                        <input type="text" id="givenName" name="givenName" placeholder="请输入名" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthDate">出生日期 <span class="required">*</span></label>
+                        <input type="date" id="birthDate" name="birthDate" placeholder="选择日期" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthPlace">出生地 <span class="required">*</span></label>
+                        <input type="text" id="birthPlace" name="birthPlace" placeholder="例如：四川成都" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nationality">现国籍 <span class="required">*</span></label>
+                        <input type="text" id="nationality" name="nationality" placeholder="例如：China" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthCountry">出生国家 <span class="required">*</span></label>
+                        <input type="text" id="birthCountry" name="birthCountry" placeholder="例如：China" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">性别 <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="gender" value="male">
+                                <span class="radio-custom"></span>
+                                男 (Male)
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="gender" value="female">
+                                <span class="radio-custom"></span>
+                                女 (Female)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="maritalStatus">婚姻状况 <span class="required">*</span></label>
+                        <select id="maritalStatus" name="maritalStatus" required>
+                            <option value="">请选择</option>
+                            <option value="single">未婚 (Single)</option>
+                            <option value="married">已婚 (Married)</option>
+                            <option value="separated">分居 (Separated)</option>
+                            <option value="divorced">离异 (Divorced)</option>
+                            <option value="widowed">丧偶 (Widowed)</option>
+                            <option value="other">其他 (Other)</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="maritalStatusOtherGroup" style="display: none;">
+                        <label for="maritalStatusOther">请说明</label>
+                        <input type="text" id="maritalStatusOther" name="maritalStatusOther" placeholder="请具体说明">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="idCard">身份证号码 <span class="required">*</span></label>
+                        <input type="text" id="idCard" name="idCard" placeholder="请输入身份证号码" required>
+                    </div>
+                </div>
+
+                <!-- 未成年人监护人信息 - 放在页面最后 -->
+                <div class="conditional-section" id="guardianSection" style="display: none;">
+                    <div class="section-divider">
+                        <span>监护人信息 (未成年人必填)</span>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="guardian1Name">监护人1姓名 <span class="required">*</span></label>
+                            <input type="text" id="guardian1Name" name="guardian1Name" placeholder="请输入监护人1姓名">
+                        </div>
+                        <div class="form-group">
+                            <label for="guardian1Nationality">监护人1国籍 <span class="required">*</span></label>
+                            <input type="text" id="guardian1Nationality" name="guardian1Nationality" placeholder="例如：China">
+                        </div>
+                        <div class="form-group">
+                            <label for="guardian1Phone">监护人1电话 <span class="required">*</span></label>
+                            <input type="tel" id="guardian1Phone" name="guardian1Phone" placeholder="请输入监护人1电话">
+                        </div>
+                        <div class="form-group">
+                            <label for="guardian1Email">监护人1邮箱</label>
+                            <input type="email" id="guardian1Email" name="guardian1Email" placeholder="请输入监护人1邮箱">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="guardian1Address">监护人1地址 <span class="required">*</span></label>
+                            <input type="text" id="guardian1Address" name="guardian1Address" placeholder="请输入监护人1地址" value="与申请人地址相同">
+                        </div>
+                    </div>
+                    <!-- 监护人2单独一行 -->
+                    <div class="form-grid" style="margin-top: 1rem;">
+                        <div class="form-group full-width">
+                            <label for="guardian2Name">监护人2姓名</label>
+                            <input type="text" id="guardian2Name" name="guardian2Name" placeholder="请输入监护人2姓名（非必填）">
+                        </div>
+                        <div class="form-group">
+                            <label for="guardian2Nationality">监护人2国籍</label>
+                            <input type="text" id="guardian2Nationality" name="guardian2Nationality" placeholder="例如：China">
+                        </div>
+                        <div class="form-group">
+                            <label for="guardian2Phone">监护人2电话</label>
+                            <input type="tel" id="guardian2Phone" name="guardian2Phone" placeholder="请输入监护人2电话">
+                        </div>
+                        <div class="form-group">
+                            <label for="guardian2Email">监护人2邮箱</label>
+                            <input type="email" id="guardian2Email" name="guardian2Email" placeholder="请输入监护人2邮箱">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="guardian2Address">监护人2地址</label>
+                            <input type="text" id="guardian2Address" name="guardian2Address" placeholder="请输入监护人2地址" value="与申请人地址相同">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <div></div>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()">
+                        下一步
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Step 2: 证件信息 -->
+            <section class="form-step" id="step2">
+                <h2 class="step-title">
+                    <span class="step-number">02</span>
+                    证件与职业信息
+                </h2>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="passportType">护照种类 <span class="required">*</span></label>
+                        <select id="passportType" name="passportType" required>
+                            <option value="">请选择</option>
+                            <option value="ordinary">普通护照 (Ordinary Passport)</option>
+                            <option value="diplomatic">外交护照 (Diplomatic Passport)</option>
+                            <option value="service">公务护照 (Service Passport)</option>
+                            <option value="official">因公护照 (Official Passport)</option>
+                            <option value="special">特殊护照 (Special Passport)</option>
+                            <option value="other">其他 (Other)</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="passportTypeOtherGroup" style="display: none;">
+                        <label for="passportTypeOther">请说明</label>
+                        <input type="text" id="passportTypeOther" name="passportTypeOther" placeholder="请具体说明">
+                    </div>
+                    <div class="form-group">
+                        <label for="passportNumber">护照号码 <span class="required">*</span></label>
+                        <input type="text" id="passportNumber" name="passportNumber" placeholder="请输入护照号码" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="passportIssueDate">护照签发日期 <span class="required">*</span></label>
+                        <input type="date" id="passportIssueDate" name="passportIssueDate" placeholder="选择日期" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="passportExpiry">有效期至 <span class="required">*</span></label>
+                        <input type="date" id="passportExpiry" name="passportExpiry" placeholder="选择日期" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="passportIssuer">签发机关 <span class="required">*</span></label>
+                        <input type="text" id="passportIssuer" name="passportIssuer" value="CHINA" placeholder="例如：China" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="address">申请人住址 <span class="required">*</span></label>
+                        <input type="text" id="address" name="address" placeholder="请输入详细住址" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="email">申请人电子邮箱 <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" placeholder="请输入电子邮箱" required>
+                    </div>
+                    <div class="form-group">
+                        <label>是否居住在现时国籍以外的国家？</label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="residenceAbroad" value="no" checked>
+                                <span class="radio-custom"></span>
+                                否 (No)
+                            </label>
+<label class="radio-item">
+                                <input type="radio" name="residenceAbroad" value="yes">
+                                <span class="radio-custom"></span>
+                                是 (Yes)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group" id="residencePermitGroup" style="display: none;">
+                        <label for="residencePermitType">居留证种类</label>
+                        <select id="residencePermitType" name="residencePermitType">
+                            <option value="">请选择</option>
+                            <option value="permanent">永久居留 (Permanent)</option>
+                            <option value="temporary">临时居留 (Temporary)</option>
+                            <option value="work">工作居留 (Work Permit)</option>
+                            <option value="student">学习居留 (Student Visa)</option>
+                            <option value="other">其他 (Other)</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="residencePermitExpiryGroup" style="display: none;">
+                        <label for="residencePermit">居留证有效期</label>
+                        <input type="date" id="residencePermit" name="residencePermit" placeholder="选择日期">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="occupation">现职业 <span class="required">*</span></label>
+                        <select id="occupation" name="occupation" required>
+                            <option value="">请选择</option>
+                            <option value="student">学生 (Student)</option>
+                            <option value="employed">在职 (Employed)</option>
+                            <option value="self-employed">自雇 (Self-employed)</option>
+                            <option value="retired">退休 (Retired)</option>
+                            <option value="unemployed">无业 (Unemployed)</option>
+                            <option value="other">其他 (Other)</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width" id="occupationOtherGroup" style="display: none;">
+                        <label for="occupationOther">请说明职业</label>
+                        <input type="text" id="occupationOther" name="occupationOther" placeholder="请具体说明">
+                    </div>
+                </div>
+
+                <!-- 工作单位/学校信息 -->
+                <div class="conditional-section" id="employerSection" style="display: none;">
+                    <div class="section-divider">
+                        <span id="employerLabel">工作单位信息</span>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="employerName" id="employerNameLabel">工作单位名称/学校名称 <span class="required">*</span></label>
+                            <input type="text" id="employerName" name="employerName" placeholder="请输入工作单位或学校名称">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="employerAddress">地址 <span class="required">*</span></label>
+                            <input type="text" id="employerAddress" name="employerAddress" placeholder="请输入地址">
+                        </div>
+                        <div class="form-group">
+                            <label for="employerPhone">电话 <span class="required">*</span></label>
+                            <input type="tel" id="employerPhone" name="employerPhone" placeholder="请输入电话号码">
+                        </div>
+                        <div class="form-group" id="currentPositionGroup" style="display: none;">
+                            <label for="currentPosition">当前职位</label>
+                            <input type="text" id="currentPosition" name="currentPosition" placeholder="请输入您的职位">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        上一步
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()">
+                        下一步
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Step 3: 行程信息 -->
+            <section class="form-step" id="step3">
+                <h2 class="step-title">
+                    <span class="step-number">03</span>
+                    行程信息
+                </h2>
+
+                <div class="form-grid">
+                    <!-- 签证申请国 -->
+                    <div class="form-group full-width">
+                        <label for="visaApplicationCountry">签证申请国 <span class="required">*</span></label>
+                        <select id="visaApplicationCountry" name="visaApplicationCountry" required onchange="syncVisaCountry()">
+                            <option value="">请选择</option>
+                            <option value="法国">法国 (France)</option>
+                            <option value="意大利">意大利 (Italy)</option>
+                            <option value="西班牙">西班牙 (Spain)</option>
+                            <option value="德国">德国 (Germany)</option>
+                            <option value="荷兰">荷兰 (Netherlands)</option>
+                            <option value="比利时">比利时 (Belgium)</option>
+                            <option value="奥地利">奥地利 (Austria)</option>
+                            <option value="瑞士">瑞士 (Switzerland)</option>
+                            <option value="葡萄牙">葡萄牙 (Portugal)</option>
+                            <option value="希腊">希腊 (Greece)</option>
+                            <option value="丹麦">丹麦 (Denmark)</option>
+                            <option value="瑞典">瑞典 (Sweden)</option>
+                            <option value="挪威">挪威 (Norway)</option>
+                            <option value="芬兰">芬兰 (Finland)</option>
+                            <option value="冰岛">冰岛 (Iceland)</option>
+                            <option value="卢森堡">卢森堡 (Luxembourg)</option>
+                            <option value="捷克">捷克 (Czech Republic)</option>
+                            <option value="波兰">波兰 (Poland)</option>
+                            <option value="斯洛伐克">斯洛伐克 (Slovakia)</option>
+                            <option value="斯洛文尼亚">斯洛文尼亚 (Slovenia)</option>
+                            <option value="匈牙利">匈牙利 (Hungary)</option>
+                            <option value="立陶宛">立陶宛 (Lithuania)</option>
+                            <option value="拉脱维亚">拉脱维亚 (Latvia)</option>
+                            <option value="爱沙尼亚">爱沙尼亚 (Estonia)</option>
+                            <option value="马耳他">马耳他 (Malta)</option>
+                            <option value="列支敦士登">列支敦士登 (Liechtenstein)</option>
+                        </select>
+                    </div>
+                    
+                    <!-- 申根目的地国 - 弹出式多选下拉菜单 -->
+                    <div class="form-group full-width">
+                        <label>预计前往申根地区 <span class="required">*</span></label>
+                        <div class="multi-select-wrapper">
+                            <input type="text" id="destinationInput" class="multi-select-input" placeholder="点击选择申根国家（可多选）" readonly onclick="toggleDestinationDropdown()">
+                            <div class="multi-select-dropdown" id="destinationDropdown">
+                                <div class="dropdown-search">
+                                    <input type="text" placeholder="搜索国家..." id="destinationSearch" oninput="filterDestinations()">
+                                </div>
+                                <div class="dropdown-options" id="destinationOptions">
+                                    <label class="dropdown-option"><input type="checkbox" value="法国" onchange="updateDestination()"> 法国 (France)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="意大利" onchange="updateDestination()"> 意大利 (Italy)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="西班牙" onchange="updateDestination()"> 西班牙 (Spain)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="德国" onchange="updateDestination()"> 德国 (Germany)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="荷兰" onchange="updateDestination()"> 荷兰 (Netherlands)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="比利时" onchange="updateDestination()"> 比利时 (Belgium)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="奥地利" onchange="updateDestination()"> 奥地利 (Austria)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="瑞士" onchange="updateDestination()"> 瑞士 (Switzerland)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="葡萄牙" onchange="updateDestination()"> 葡萄牙 (Portugal)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="希腊" onchange="updateDestination()"> 希腊 (Greece)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="丹麦" onchange="updateDestination()"> 丹麦 (Denmark)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="瑞典" onchange="updateDestination()"> 瑞典 (Sweden)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="挪威" onchange="updateDestination()"> 挪威 (Norway)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="芬兰" onchange="updateDestination()"> 芬兰 (Finland)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="冰岛" onchange="updateDestination()"> 冰岛 (Iceland)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="卢森堡" onchange="updateDestination()"> 卢森堡 (Luxembourg)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="捷克" onchange="updateDestination()"> 捷克 (Czech Republic)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="波兰" onchange="updateDestination()"> 波兰 (Poland)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="斯洛伐克" onchange="updateDestination()"> 斯洛伐克 (Slovakia)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="斯洛文尼亚" onchange="updateDestination()"> 斯洛文尼亚 (Slovenia)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="匈牙利" onchange="updateDestination()"> 匈牙利 (Hungary)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="立陶宛" onchange="updateDestination()"> 立陶宛 (Lithuania)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="拉脱维亚" onchange="updateDestination()"> 拉脱维亚 (Latvia)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="爱沙尼亚" onchange="updateDestination()"> 爱沙尼亚 (Estonia)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="马耳他" onchange="updateDestination()"> 马耳他 (Malta)</label>
+                                    <label class="dropdown-option"><input type="checkbox" value="列支敦士登" onchange="updateDestination()"> 列支敦士登 (Liechtenstein)</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="selected-tags" id="destinationTags"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="firstEntry">申根首入国 <span class="required">*</span></label>
+                        <select id="firstEntry" name="firstEntry" required>
+                            <option value="">请选择</option>
+                            <option value="法国">法国 (France)</option>
+                            <option value="意大利">意大利 (Italy)</option>
+                            <option value="西班牙">西班牙 (Spain)</option>
+                            <option value="德国">德国 (Germany)</option>
+                            <option value="荷兰">荷兰 (Netherlands)</option>
+                            <option value="比利时">比利时 (Belgium)</option>
+                            <option value="奥地利">奥地利 (Austria)</option>
+                            <option value="瑞士">瑞士 (Switzerland)</option>
+                            <option value="葡萄牙">葡萄牙 (Portugal)</option>
+                            <option value="希腊">希腊 (Greece)</option>
+                            <option value="丹麦">丹麦 (Denmark)</option>
+                            <option value="瑞典">瑞典 (Sweden)</option>
+                            <option value="挪威">挪威 (Norway)</option>
+                            <option value="芬兰">芬兰 (Finland)</option>
+                            <option value="其他">其他 (Other)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="entryType">申请入境次数 <span class="required">*</span></label>
+                        <select id="entryType" name="entryType" required>
+                            <option value="">请选择</option>
+                            <option value="single">一次 (Single Entry)</option>
+                            <option value="two">两次 (Two Entries)</option>
+                            <option value="multiple">多次 (Multiple Entries)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="arrivalDate">预计入境日期 <span class="required">*</span></label>
+                        <input type="date" id="arrivalDate" name="arrivalDate" placeholder="选择日期" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="departureDate">预计离境日期 <span class="required">*</span></label>
+                        <input type="date" id="departureDate" name="departureDate" placeholder="选择日期" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="stayDuration">预计逗留天数</label>
+                        <input type="text" id="stayDuration" name="stayDuration" readonly placeholder="自动计算">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="tripPurpose">旅程主要目的 <span class="required">*</span></label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="tripPurpose" value="tourism">
+                                <span class="checkbox-custom"></span>
+                                旅游 (Tourism)
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="tripPurpose" value="business">
+                                <span class="checkbox-custom"></span>
+                                商务 (Business)
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="tripPurpose" value="family">
+                                <span class="checkbox-custom"></span>
+                                探亲访友 (Visiting Family/Friends)
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="tripPurpose" value="culture">
+                                <span class="checkbox-custom"></span>
+                                文化 (Cultural)
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="tripPurpose" value="sports">
+                                <span class="checkbox-custom"></span>
+                                体育 (Sports)
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="tripPurpose" value="study">
+                                <span class="checkbox-custom"></span>
+                                学习 (Study)
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="tripPurpose" value="transit">
+                                <span class="checkbox-custom"></span>
+                                过境 (Transit)
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="tripPurpose" value="medical">
+                                <span class="checkbox-custom"></span>
+                                医疗 (Medical Reasons)
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="tripPurpose" value="other">
+                                <span class="checkbox-custom"></span>
+                                其他 (Other)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group" id="tripPurposeOtherGroup" style="display: none;">
+                        <label for="tripPurposeOther">请说明</label>
+                        <input type="text" id="tripPurposeOther" name="tripPurposeOther" placeholder="请具体说明">
+                    </div>
+                    
+                    <!-- 同行人信息 -->
+                    <div class="form-group full-width">
+                        <label>是否有同行人？</label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="hasCompanion" value="no" checked onchange="toggleCompanionSection(this.value)">
+                                <span class="radio-custom"></span>
+                                否 (No)
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="hasCompanion" value="yes" onchange="toggleCompanionSection(this.value)">
+                                <span class="radio-custom"></span>
+                                是 (Yes)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- 同行人信息列表 -->
+                    <div class="form-group full-width" id="companionSection" style="display: none;">
+                        <div id="companionList"></div>
+                        <button type="button" class="btn btn-secondary" onclick="addCompanion()" style="margin-top: 10px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 5v14M5 12h14"/>
+                            </svg>
+                            添加同行人
+                        </button>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label>过去三年是否获批过申根签证？</label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="prevSchengenVisa" value="no" checked>
+                                <span class="radio-custom"></span>
+                                否 (No)
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="prevSchengenVisa" value="yes">
+                                <span class="radio-custom"></span>
+                                是 (Yes)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group full-width" id="prevVisaInfoGroup" style="display: none;">
+                        <div class="section-divider">
+                            <span>最近一次签证信息</span>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="prevVisaNumber">最近一次签证编号</label>
+                                <input type="text" id="prevVisaNumber" name="prevVisaNumber" placeholder="例：FRA000000001">
+                            </div>
+                            <div class="form-group">
+<label for="prevVisaIssueDate">签发日期</label>
+                                <input type="date" id="prevVisaIssueDate" name="prevVisaIssueDate" placeholder="选择日期">
+                            </div>
+                            <div class="form-group">
+                                <label for="prevVisaExpiryDate">有效期至</label>
+                                <input type="date" id="prevVisaExpiryDate" name="prevVisaExpiryDate" placeholder="选择日期">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>最近一次申根签证指纹记录</label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="fingerprints" value="no" checked>
+                                <span class="radio-custom"></span>
+                                否 (No)
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="fingerprints" value="yes">
+                                <span class="radio-custom"></span>
+                                是 (Yes)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group" id="fingerprintsDateGroup" style="display: none;">
+                        <label for="fingerprintsDate">指纹记录日期</label>
+                        <input type="date" id="fingerprintsDate" name="fingerprintsDate" placeholder="选择日期">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        上一步
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()">
+                        下一步
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Step 4: 邀请与住宿 -->
+            <section class="form-step" id="step4">
+                <h2 class="step-title">
+                    <span class="step-number">04</span>
+                    邀请与住宿信息
+                </h2>
+
+                <div class="form-group">
+                    <label>是否有邀请人或邀请机构？ <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-item">
+                            <input type="radio" name="hasInviter" value="no" checked>
+                            <span class="radio-custom"></span>
+                            无 (酒店/暂住地)
+                        </label>
+                        <label class="radio-item">
+                            <input type="radio" name="hasInviter" value="personal">
+                            <span class="radio-custom"></span>
+                                个人邀请
+                        </label>
+                        <label class="radio-item">
+                            <input type="radio" name="hasInviter" value="organization">
+                            <span class="radio-custom"></span>
+                            公司/机构邀请
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 无邀请人 - 酒店信息 -->
+                <div class="conditional-section" id="hotelSection">
+                    <div class="section-divider">
+                        <span>酒店/暂住地信息</span>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="hotelName">酒店/暂住地名称</label>
+                            <input type="text" id="hotelName" name="hotelName" placeholder="请输入酒店名称">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="hotelAddress">地址</label>
+                            <input type="text" id="hotelAddress" name="hotelAddress" placeholder="请输入地址">
+                        </div>
+                        <div class="form-group">
+                            <label for="hotelPhone">电话</label>
+                            <input type="tel" id="hotelPhone" name="hotelPhone" placeholder="请输入电话号码">
+                        </div>
+                        <div class="form-group">
+                            <label for="hotelEmail">电子邮件</label>
+                            <input type="email" id="hotelEmail" name="hotelEmail" placeholder="请输入电子邮件">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 个人邀请 -->
+                <div class="conditional-section" id="personalInviterSection" style="display: none;">
+                    <div class="section-divider">
+                        <span>邀请人信息</span>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="inviterName">邀请人姓名</label>
+                            <input type="text" id="inviterName" name="inviterName" placeholder="请输入邀请人姓名">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="inviterAddress">邀请人住址</label>
+                            <input type="text" id="inviterAddress" name="inviterAddress" placeholder="请输入邀请人住址">
+                        </div>
+                        <div class="form-group">
+                            <label for="inviterPhone">邀请人电话</label>
+                            <input type="tel" id="inviterPhone" name="inviterPhone" placeholder="请输入电话号码">
+                        </div>
+                        <div class="form-group">
+                            <label for="inviterEmail">邀请人电子邮件</label>
+                            <input type="email" id="inviterEmail" name="inviterEmail" placeholder="请输入电子邮件">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 机构邀请 -->
+                <div class="conditional-section" id="orgInviterSection" style="display: none;">
+                    <div class="section-divider">
+                        <span>邀请公司/机构信息</span>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="orgName">公司/机构名称</label>
+                            <input type="text" id="orgName" name="orgName" placeholder="请输入公司/机构名称">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="orgAddress">公司/机构地址</label>
+                            <input type="text" id="orgAddress" name="orgAddress" placeholder="请输入公司/机构地址">
+                        </div>
+                        <div class="form-group">
+                            <label for="orgPhone">公司/机构电话</label>
+                            <input type="tel" id="orgPhone" name="orgPhone" placeholder="请输入电话号码">
+                        </div>
+                        <div class="form-group">
+                            <label for="orgContactName">联系人姓名</label>
+                            <input type="text" id="orgContactName" name="orgContactName" placeholder="请输入联系人姓名">
+                        </div>
+                        <div class="form-group">
+                            <label for="orgContactPhone">联系人电话</label>
+                            <input type="tel" id="orgContactPhone" name="orgContactPhone" placeholder="请输入联系人电话">
+                        </div>
+                        <div class="form-group">
+                            <label for="orgContactEmail">联系人电子邮件</label>
+                            <input type="email" id="orgContactEmail" name="orgContactEmail" placeholder="请输入电子邮件">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        上一步
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()">
+                        下一步
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Step 5: 费用出资 -->
+            <section class="form-step" id="step5">
+                <h2 class="step-title">
+                    <span class="step-number">05</span>
+                    费用与出资信息
+                </h2>
+
+                <div class="form-group">
+                    <label>旅费及停留费用由谁支付？ <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-item large">
+                            <input type="radio" name="fundingSource" value="applicant" checked>
+                            <span class="radio-custom"></span>
+                            申请人本人支付
+                        </label>
+                        <label class="radio-item large">
+                            <input type="radio" name="fundingSource" value="sponsor">
+                            <span class="radio-custom"></span>
+                            赞助人/邀请方支付
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 本人支付 -->
+                <div class="conditional-section" id="applicantFundingSection">
+                    <div class="section-divider">
+                        <span>本人支付方式</span>
+                    </div>
+                    <div class="form-group">
+                        <label>支付方式 (可多选)</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="applicantMeans" value="cash" id="applicantCash">
+                                <span class="checkbox-custom"></span>
+                                现金 (Cash)
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="applicantMeans" value="creditCard" id="applicantCreditCard">
+                                <span class="checkbox-custom"></span>
+                                信用卡 (Credit Card)
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="applicantMeans" value="prepaidAccommodation">
+                                <span class="checkbox-custom"></span>
+                                预付住宿 (Prepaid Accommodation)
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="applicantMeans" value="prepaidTransport">
+                                <span class="checkbox-custom"></span>
+                                预付交通 (Prepaid Transport)
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="applicantMeans" value="other">
+                                <span class="checkbox-custom"></span>
+                                其他 (Other)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group" id="applicantMeansOtherGroup" style="display: none;">
+                        <label for="applicantMeansOther">请说明其他方式</label>
+                        <input type="text" id="applicantMeansOther" name="applicantMeansOther" placeholder="请具体说明">
+                    </div>
+                </div>
+
+                <!-- 赞助人支付 -->
+                <div class="conditional-section" id="sponsorFundingSection" style="display: none;">
+                    <div class="section-divider">
+                        <span>赞助人支付信息</span>
+                    </div>
+                    <div class="form-group">
+                        <label>赞助人类型</label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="sponsorType" value="inviter" checked>
+                                <span class="radio-custom"></span>
+                                邀请人或邀请方
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="sponsorType" value="other">
+                                <span class="radio-custom"></span>
+                                其他赞助人
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group" id="otherSponsorNameGroup" style="display: none;">
+                        <label for="otherSponsorName">赞助人姓名</label>
+                        <input type="text" id="otherSponsorName" name="otherSponsorName" placeholder="请输入赞助人姓名">
+                    </div>
+                    <div class="form-group">
+                        <label>支付方式 (可多选)</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="sponsorMeans" value="cash">
+                                <span class="checkbox-custom"></span>
+                                现金 (Cash)
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="sponsorMeans" value="accommodationProvided">
+                                <span class="checkbox-custom"></span>
+                                提供住宿 (Accommodation Provided)
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="sponsorMeans" value="allExpenses" id="sponsorAllExpenses" checked>
+                                <span class="checkbox-custom"></span>
+                                支付旅程期间所有开支
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="sponsorMeans" value="prepaidTransport">
+                                <span class="checkbox-custom"></span>
+                                预付交通 (Prepaid Transport)
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="sponsorMeans" value="other">
+                                <span class="checkbox-custom"></span>
+                                其他 (Other)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group" id="sponsorMeansOtherGroup" style="display: none;">
+                        <label for="sponsorMeansOther">请说明其他方式</label>
+                        <input type="text" id="sponsorMeansOther" name="sponsorMeansOther" placeholder="请具体说明">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        上一步
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()">
+                        下一步
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Step 6: 预览与导出 -->
+            <section class="form-step" id="step6">
+                <h2 class="step-title">
+                    <span class="step-number">06</span>
+                    预览与导出
+                </h2>
+
+                <div class="preview-container">
+                    <div class="preview-header">
+                        <h3>填写信息预览</h3>
+                        <p class="preview-hint">请核对以下信息，确认无误后导出申请表</p>
+                    </div>
+                    
+                    <div class="preview-content" id="previewContent">
+                        <!-- 动态生成预览内容 -->
+                    </div>
+                </div>
+
+                <div class="form-actions export-actions">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        上一步
+                    </button>
+                    <button type="button" class="btn btn-export" onclick="exportToWord()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        导出Word申请表
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
