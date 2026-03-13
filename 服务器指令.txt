@@ -1,0 +1,4 @@
+项目路径：cd /www/wwwroot/Form
+拉取最新代码：
+cd /www/wwwroot/Form
+git pull origin master

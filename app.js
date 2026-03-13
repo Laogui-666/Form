@@ -693,13 +693,228 @@ function getInviterTypeText(value) {
 }
 
 // ============================================
-// Word导出
+// Word导出 (docx格式)
 // ============================================
 
 function exportToWord() {
     const formData = collectFormData();
+    const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, WidthType, AlignmentType, BorderStyle } = docx;
     
-    // 生成Word文档内容
+    // 样式定义
+    const headingStyle = {
+        font: { name: 'Microsoft YaHei', size: 22, bold: true, color: { hex: '4A6572' } },
+        alignment: AlignmentType.CENTER
+    };
+    
+    const sectionTitleStyle = {
+        font: { name: 'Microsoft YaHei', size: 13, bold: true, color: { hex: '4A6572' } },
+        shading: { fill: 'F0F2F5' }
+    };
+    
+    const labelStyle = {
+        font: { name: 'Microsoft YaHei', size: 10, bold: true, color: { hex: '1a1a1a' } },
+        shading: { fill: 'F0F2F5' }
+    };
+    
+    const valueStyle = {
+        font: { name: 'Microsoft YaHei', size: 10, color: { hex: '1a1a1a' } }
+    };
+    
+    // 创建表格行的辅助函数
+    function createTableRow(label, value) {
+        return new TableRow({
+            children: [
+                new TableCell({
+                    children: [new Paragraph({ children: [new TextRun({ text: label, ...labelStyle })] })],
+                    shading: { fill: 'F0F2F5' },
+                    width: { size: 28, type: WidthType.PERCENTAGE }
+                }),
+                new TableCell({
+                    children: [new Paragraph({ children: [new TextRun({ text: value || '', ...valueStyle })] })],
+                    width: { size: 72, type: WidthType.PERCENTAGE }
+                })
+            ]
+        });
+    }
+    
+    // 构建文档 children
+    const children = [];
+    
+    // 标题
+    children.push(new Paragraph({
+        children: [new TextRun({ text: '申根签证申请表', ...headingStyle })],
+        spacing: { after: 100 }
+    }));
+    
+    // 副标题
+    children.push(new Paragraph({
+        children: [new TextRun({ text: 'Schengen Visa Application Form · 盼达文旅', font: { name: 'Microsoft YaHei', size: 10, color: { hex: '8899A6' } } })],
+        alignment: AlignmentType.CENTER,
+        spacing: { after: 300 }
+    }));
+    
+    // 一、个人信息
+    children.push(new Paragraph({
+        children: [new TextRun({ text: '一、个人信息', font: { name: 'Microsoft YaHei', size: 13, bold: true, color: { hex: '4A6572' } } })],
+        spacing: { before: 200, after: 100 }
+    }));
+    
+    children.push(new Table({
+        rows: [
+            createTableRow('姓 (Surname)', formData.surname),
+            createTableRow('出生时姓氏', formData.birthSurname),
+            createTableRow('名 (Given Name)', formData.givenName),
+            createTableRow('出生日期', formatDate(formData.birthDate)),
+            createTableRow('出生地', formData.birthPlace),
+            createTableRow('出生国家', formData.birthCountry),
+            createTableRow('现国籍', formData.nationality),
+            createTableRow('性别', formData.gender === 'male' ? '男' : '女'),
+            createTableRow('婚姻状况', getMaritalStatusText(formData.maritalStatus)),
+            formData.maritalStatus === 'other' ? createTableRow('婚姻状况说明', formData.maritalStatusOther) : null,
+            createTableRow('身份证号码', formData.idCard)
+        ].filter(Boolean),
+        width: { size: 100, type: WidthType.PERCENTAGE }
+    }));
+    
+    // 监护人信息
+    if (formData.guardian1Name) {
+        children.push(new Paragraph({
+            children: [new TextRun({ text: '一.1 监护人信息', font: { name: 'Microsoft YaHei', size: 13, bold: true, color: { hex: '4A6572' } } })],
+            spacing: { before: 200, after: 100 }
+        }));
+        
+        children.push(new Table({
+            rows:[
+                createTableRow('监护人1姓名', formData.guardian1Name),
+                createTableRow('监护人1国籍', formData.guardian1Nationality),
+                createTableRow('监护人1电话', formData.guardian1Phone),
+                createTableRow('监护人1邮箱', formData.guardian1Email),
+                createTableRow('监护人1地址', formData.guardian1Address),
+                formData.guardian2Name ? createTableRow('监护人2姓名', formData.guardian2Name) : null,
+                formData.guardian2Name ? createTableRow('监护人2国籍', formData.guardian2Nationality) : null,
+                formData.guardian2Name ? createTableRow('监护人2电话', formData.guardian2Phone) : null,
+                formData.guardian2Name ? createTableRow('监护人2邮箱', formData.guardian2Email) : null,
+                formData.guardian2Name ? createTableRow('监护人2地址', formData.guardian2Address) : null
+            ].filter(Boolean),
+            width: { size: 100, type: WidthType.PERCENTAGE }
+        }));
+    }
+    
+    // 二、证件与职业信息
+    children.push(new Paragraph({
+        children: [new TextRun({ text: '二、证件与职业信息', font: { name: 'Microsoft YaHei', size: 13, bold: true, color: { hex: '4A6572' } } })],
+        spacing: { before: 200, after: 100 }
+    }));
+    
+    const passportRows = [
+        createTableRow('护照种类', getPassportTypeText(formData.passportType)),
+        formData.passportType === 'other' ? createTableRow('护照种类说明', formData.passportTypeOther) : null,
+        createTableRow('护照号码', formData.passportNumber),
+        createTableRow('护照签发日期', formatDate(formData.passportIssueDate)),
+        createTableRow('有效期至', formatDate(formData.passportExpiry)),
+        createTableRow('签发机关', formData.passportIssuer),
+        createTableRow('申请人住址', formData.address),
+        createTableRow('电子邮箱', formData.email),
+        createTableRow('现职业', getOccupationText(formData.occupation)),
+        formData.occupation === 'other' ? createTableRow('职业说明', formData.occupationOther) : null
+    ];
+    
+    if (formData.employerName) {
+        passportRows.push(createTableRow('工作单位/学校名称', formData.employerName));
+        passportRows.push(createTableRow('工作单位/学校地址', formData.employerAddress));
+        passportRows.push(createTableRow('工作单位/学校电话', formData.employerPhone));
+    }
+    
+    children.push(new Table({
+        rows: passportRows.filter(Boolean),
+        width: { size: 100, type: WidthType.PERCENTAGE }
+    }));
+    
+    // 三、行程信息
+    children.push(new Paragraph({
+        children: [new TextRun({ text: '三、行程信息', font: { name: 'Microsoft YaHei', size: 13, bold: true, color: { hex: '4A6572' } } })],
+        spacing: { before: 200, after: 100 }
+    }));
+    
+    children.push(new Table({
+        rows: [
+            createTableRow('签证申请国', formData.visaApplicationCountry),
+            createTableRow('预计前往申根地区', formData.schengenDestinations),
+            createTableRow('申根首入国', formData.firstEntry),
+            createTableRow('申请入境次数', getEntryTypeText(formData.entryType)),
+            createTableRow('预计入境日期', formatDate(formData.arrivalDate)),
+            createTableRow('预计离境日期', formatDate(formData.departureDate)),
+            createTableRow('预计逗留天数', formData.stayDuration),
+            createTableRow('旅程主要目的', getTripPurposeText(formData.tripPurpose)),
+            formData.tripPurpose && formData.tripPurpose.includes('other') ? createTableRow('目的说明', formData.tripPurposeOther) : null
+        ].filter(Boolean),
+        width: { size: 100, type: WidthType.PERCENTAGE }
+    }));
+    
+    // 四、邀请与住宿信息
+    children.push(new Paragraph({
+        children: [new TextRun({ text: '四、邀请与住宿信息', font: { name: 'Microsoft YaHei', size: 13, bold: true, color: { hex: '4A6572' } } })],
+        spacing: { before: 200, after: 100 }
+    }));
+    
+    let inviterRows = [createTableRow('邀请类型', getInviterTypeText(formData.hasInviter))];
+    
+    if (formData.hasInviter === 'no') {
+        inviterRows.push(createTableRow('酒店/暂住地名称', formData.hotelName));
+        inviterRows.push(createTableRow('酒店/暂住地地址', formData.hotelAddress));
+        inviterRows.push(createTableRow('酒店/暂住地电话', formData.hotelPhone));
+        inviterRows.push(createTableRow('酒店/暂住地邮箱', formData.hotelEmail));
+    } else if (formData.hasInviter === 'personal') {
+        inviterRows.push(createTableRow('邀请人姓名', formData.inviterName));
+        inviterRows.push(createTableRow('邀请人住址', formData.inviterAddress));
+        inviterRows.push(createTableRow('邀请人电话', formData.inviterPhone));
+        inviterRows.push(createTableRow('邀请人邮箱', formData.inviterEmail));
+    } else if (formData.hasInviter === 'organization') {
+        inviterRows.push(createTableRow('公司/机构名称', formData.orgName));
+        inviterRows.push(createTableRow('公司/机构地址', formData.orgAddress));
+        inviterRows.push(createTableRow('公司/机构电话', formData.orgPhone));
+        inviterRows.push(createTableRow('联系人姓名', formData.orgContactName));
+        inviterRows.push(createTableRow('联系人电话', formData.orgContactPhone));
+        inviterRows.push(createTableRow('联系人邮箱', formData.orgContactEmail));
+    }
+    
+    children.push(new Table({
+        rows: inviterRows,
+        width: { size: 100, type: WidthType.PERCENTAGE }
+    }));
+    
+    // 五、费用与出资信息
+    children.push(new Paragraph({
+        children: [new TextRun({ text: '五、费用与出资信息', font: { name: 'Microsoft YaHei', size: 13, bold: true, color: { hex: '4A6572' } } })],
+        spacing: { before: 200, after: 100 }
+    }));
+    
+    children.push(new Table({
+        rows: [
+            createTableRow('费用来源', formData.fundingSource === 'applicant' ? '本人支付' : '赞助人支付')
+        ],
+        width: { size: 100, type: WidthType.PERCENTAGE }
+    }));
+    
+    // 签名区域
+    children.push(new Paragraph({
+        children: [new TextRun({ text: '申请人签字：_______________________    日期：' + getCurrentDate(), font: { name: 'Microsoft YaHei', size: 10, color: { hex: '1a1a1a' } } })],
+        spacing: { before: 400 }
+    }));
+    
+    // 创建文档
+    const doc = new Document({
+        sections: [{
+            properties: {},
+            children: children
+        }]
+    });
+    
+    // 生成并下载
+    Packer.toBlob(doc).then(blob => {
+        saveAs(blob, '申根签证申请表.docx');
+    });
+}
     let content = `
         <html xmlns:o='urn:schemas-microsoft-com:office:office' 
               xmlns:w='urn:schemas-microsoft-com:office:word' 
